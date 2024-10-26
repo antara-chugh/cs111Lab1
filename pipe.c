@@ -78,7 +78,11 @@ int main(int argc, char *argv[])
       }
 
       for(int i=0; i<num_cmds; i++){
-	wait(NULL);
+	pid_t pid=waitpid(-1, NULL, 0);
+	if(pid==-1){
+	  perror("waitpid");
+	  exit(1);
+	}
 	
       }
 
