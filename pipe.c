@@ -9,6 +9,10 @@ int main(int argc, char *argv[])
 	// TODO: it's all yours
   int num_cmds=argc-1;
   int pipes [num_cmds-1][2];
+  if(num_cmds==0){
+    perror("EINVAL");
+    exit(1);
+  }
   if(num_cmds==1){
     pid_t pid=fork();
     if(pid==-1){
@@ -78,11 +82,11 @@ int main(int argc, char *argv[])
       }
 
       for(int i=0; i<num_cmds; i++){
-	pid_t pid=waitpid(-1, NULL, 0);
-	if(pid==-1){
-	  perror("waitpid");
+	if(wait(NULL)==-1){
+	  perror("Invalid arg");
 	  exit(1);
 	}
+	
 	
       }
 
