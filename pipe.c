@@ -69,6 +69,7 @@ int main(int argc, char *argv[])
 
 	execlp(argv[i+1], argv[i+1], (char *)NULL);
 	printf("bogus argument shouldn't pass");
+	exit(1);
 	return errno;
 
 
@@ -85,9 +86,10 @@ int main(int argc, char *argv[])
       }
 
       for(int i=0; i<num_cmds; i++){
-	int status=wait(NULL);
-	if(errno!=0){
-	  return errno;
+	int status;
+	wait(&status);
+	if(WIFEXITED(status)){
+	  return -1;
 	}
 	
 	
