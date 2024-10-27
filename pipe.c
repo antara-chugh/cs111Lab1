@@ -12,17 +12,17 @@ int main(int argc, char *argv[])
   int pipes [num_cmds-1][2];
   if(num_cmds==0){
     
-    exit(errno);
+    return errno;
   }
   if(num_cmds==1){
     pid_t pid=fork();
     if(pid==-1){
       
-      exit(errno);
+      return errno;
     }else if(pid==0){
       execlp(argv[1], argv[1], (char *)NULL);
       
-      exit(errno);
+      return errno;
     }else{
       waitpid(pid, NULL, 0);
     }
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
   for(int i=0; i<num_cmds-1; i++){
     if(pipe(pipes[i])!=0){
 	
-	exit(errno);
+      return errno;
       }
 
 
@@ -42,14 +42,14 @@ int main(int argc, char *argv[])
       pid_t pid=fork();
       if(pid<0){
 	
-	exit(errno);
+	return errno;
 
       }else if(pid==0){
 	if(i>0){
 
 	  if(dup2(pipes[i-1][0], STDIN_FILENO)==-1){
 	    
-	    exit(errno);
+	    return errno;
 	  }
 	  
 
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 	if(i<num_cmds-1){
 	  if(dup2(pipes[i][1], STDOUT_FILENO)==-1){
 	    
-	    exit(errno);
+	    return errno;
 	  }
 	}
 
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 
 	execlp(argv[i+1], argv[i+1], (char *)NULL);
 	
-	exit(errno);
+	return errno;
 
 
       }
@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
       for(int i=0; i<num_cmds; i++){
 	if(wait(NULL)==-1){
 	  
-	  exit(errno);
+	  return errno;
 	}
 	
 	
