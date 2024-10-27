@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
   int num_cmds=argc-1;
   int pipes [num_cmds-1][2];
   if(num_cmds==0){
-    print(errno);
+    printf(errno);
     return errno;
   }
   if(num_cmds==1){
@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
       return errno;
     }else if(pid==0){
       execlp(argv[1], argv[1], (char *)NULL);
-      print(errno);
+      printf(errno);
       return -1;
     }else{
       waitpid(pid, NULL, 0);
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 	}
 
 	execlp(argv[i+1], argv[i+1], (char *)NULL);
-	print(errno);
+	printf(errno);
 	return -1;
 
 
@@ -86,8 +86,8 @@ int main(int argc, char *argv[])
 
       for(int i=0; i<num_cmds; i++){
 	if(wait(NULL)==-1){
-	  
-	  return errno;
+	  printf(errno);
+	  return -1;
 	}
 	
 	
