@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 	}
 
 	execlp(argv[i+1], argv[i+1], (char *)NULL);
-	
+	printf("bogus argument shouldn't pass");
 	return errno;
 
 
@@ -93,6 +93,7 @@ int main(int argc, char *argv[])
 	
       }
 
+      printf("ran");
       return 0;
 
     
