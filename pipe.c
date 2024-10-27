@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
   int pipes [num_cmds-1][2];
   if(num_cmds==0){
     printf("%d", errno);
-    return errno;
+    return EINVAL;
   }
   if(num_cmds==1){
     pid_t pid=fork();
