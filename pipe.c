@@ -9,11 +9,12 @@ int main(int argc, char *argv[])
 {
 	// TODO: it's all yours
   int num_cmds=argc-1;
-  int pipes [num_cmds-1][2];
-  if(num_cmds==0){
+  
+   if(num_cmds==0){
     
     return EINVAL;
   }
+   /*
   if(num_cmds==1){
     pid_t pid=fork();
     if(pid<0){
@@ -28,15 +29,54 @@ int main(int argc, char *argv[])
     }
     return 0;
   }
+  */
 
-  for(int i=0; i<num_cmds-1; i++){
-    if(pipe(pipes[i])!=0){
-	
-      return errno;
+  int prev_output;
+  for(int i=1; i<argc; i++){
+
+    int pipefd[2];
+    if(pipe(pipefd)<0){
+
+      return -1;
+    }
+
+    if(i<(argc-1)){
+
+      pid_t pid=fork();
+      if(pid==0){
+	//child process
+	if(i>1){
+
+	  dup2(prev_output, 0);
+	  close(prev_output);
+	}
+	dup2(pipefd[1], 1);
+	close(pipefd[1]);
+	close(pipefd[0]);
+	execlp(argv[i], argv[i], (char *)NULL);
+	exit(1);
+      }else{
+	int status;
+	wait(&status);
+	if(errno!=0){
+	  return errno;
+	}
+	prev_output=pipefd[0];
+	close(pipefd[1]);
       }
+    }else{
+      dup2(prev_output,0);
+      close(prev_output);
+      execlp(argv[i], argv[i], (char *)NULL); 
 
+
+
+    }
 
   }
+  return 0;
+}
+/*
   
     for(int i=0;i<num_cmds; i++){
      pid_t pid= fork();
@@ -61,11 +101,11 @@ int main(int argc, char *argv[])
 	  }
 	}
 
-	/*for(int j=0; j<num_cmds-1; j++){
+	for(int j=0; j<num_cmds-1; j++){
 	  close(pipes[j][0]);
 	  close(pipes[j][1]);
 
-	  }*/
+	  }
 
 	execlp(argv[i+1], argv[i+1], (char *)NULL);
 	printf("bogus argument shouldn't pass");
@@ -112,9 +152,9 @@ int main(int argc, char *argv[])
 
       printf("ran");
       return 0;
-    */
+    
     
     
 }
-
+*/
   
