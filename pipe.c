@@ -37,12 +37,9 @@ int main(int argc, char *argv[])
 
 
   }
-  bool canRun=True;
+  
     for(int i=0;i<num_cmds; i++){
-      if(canRun){ pid_t pid=fork();
-      }else{
-	break;
-      }
+      fork();
       if(pid<0){
 	
 	return errno;
@@ -64,11 +61,11 @@ int main(int argc, char *argv[])
 	  }
 	}
 
-	for(int j=0; j<num_cmds-1; j++){
+	/*for(int j=0; j<num_cmds-1; j++){
 	  close(pipes[j][0]);
 	  close(pipes[j][1]);
 
-	}
+	  }*/
 
 	execlp(argv[i+1], argv[i+1], (char *)NULL);
 	printf("bogus argument shouldn't pass");
@@ -78,12 +75,26 @@ int main(int argc, char *argv[])
 
 
       }
-    }
+      else{
 
+	int status;
+	wait(&status);
+	if(WIFEXITED(status)){
+	  return -1;
+	}
+	if(i>0){
+	close(pipes[i-1][0]);
+	close(pipes[i-1][1]);
+	}
+
+
+      }
+    }
+    return 0;
       
 
       //parent process
-      for(int i=0; i<num_cmds-1; i++){
+    /* for(int i=0; i<num_cmds-1; i++){
 
 	close(pipes[i][0]);
 	close(pipes[i][1]);
@@ -101,7 +112,7 @@ int main(int argc, char *argv[])
 
       printf("ran");
       return 0;
-
+    */
     
     
 }
