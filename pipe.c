@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
   }
   
     for(int i=0;i<num_cmds; i++){
-      fork();
+     pid_t pid= fork();
       if(pid<0){
 	
 	return errno;
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 	execlp(argv[i+1], argv[i+1], (char *)NULL);
 	printf("bogus argument shouldn't pass");
 	exit(1);
-	canRun=False;
+	
 	return errno;
 
 
