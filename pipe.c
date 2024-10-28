@@ -58,8 +58,8 @@ int main(int argc, char *argv[])
       }else{
 	int status;
 	wait(&status);
-	if(errno!=0){
-	  return errno;
+	if(WIFEXITED(status)){
+	  return -1;
 	}
 	prev_output=pipefd[0];
 	close(pipefd[1]);
