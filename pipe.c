@@ -54,12 +54,12 @@ int main(int argc, char *argv[])
 	close(pipefd[1]);
 	close(pipefd[0]);
 	execlp(argv[i], argv[i], (char *)NULL);
-	exit(1);
+	
       }else{
 	int status;
 	wait(&status);
-	if(WIFEXITED(status)){
-	  return -1;
+	if(errno<0){
+	  return errno;
 	}
 	prev_output=pipefd[0];
 	close(pipefd[1]);
@@ -68,7 +68,9 @@ int main(int argc, char *argv[])
       dup2(prev_output,0);
       close(prev_output);
       execlp(argv[i], argv[i], (char *)NULL); 
-
+      if(errno!=0){
+	return errno;
+      }
 
 
     }
